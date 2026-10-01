@@ -1,6 +1,6 @@
 # 08 · MVP, custos, negócio e riscos
 
-Selos: ✅ confirmado · 🟡 provável · 🔬 necessita teste. **Todos os valores em R$ são premissas a validar com cotações reais**; câmbio assumido R$ 5,50/US$.
+Selos: ✅ confirmado · 🟡 provável · 🔬 necessita teste. Os **preços da Tuya e do Supabase em US$ são oficiais** ✅ (lidos nas páginas dos fornecedores em 2026-10-01); **todos os valores em R$ são premissas a validar com cotações reais** (câmbio assumido R$ 5,50/US$).
 
 ## 1. POC × MVP × Produto
 
@@ -85,7 +85,7 @@ Contrato e termos · política de privacidade/LGPD · garantia e RMA · catálog
 | Tablet de parede (≈ R$ 700) | — | — | 700 |
 | **Total** | **≈ R$ 750** | **≈ R$ 2.000** | **≈ R$ 3.970** |
 
-### 3.2 Plataforma (mensal) 🟡
+### 3.2 Plataforma (mensal)
 
 | Item | POC | MVP/piloto (≤ 10 casas) | 100 casas | 1.000 casas |
 |---|---:|---:|---:|---:|
@@ -97,11 +97,11 @@ Contrato e termos · política de privacidade/LGPD · garantia e RMA · catálog
 | App de loja (opcional): Apple US$ 99/ano · Google US$ 25 único | — | — | — | — |
 | **Subtotal (sem Tuya)** | **≈ R$ 0–40** | **≈ R$ 200–300** | **≈ R$ 400–700** | **≈ R$ 1,3–3 mil** |
 | **Por casa** | — | R$ 20–30 | **≈ R$ 5** | **≈ R$ 2–3** |
-| **Tuya** | trial (R$ 0) | **a definir (Portão 1)** | a definir | a definir |
+| **Tuya** | Trial (R$ 0; **só a sua casa**) | **Flagship US$ 25 mil/ano ≈ R$ 11,5 mil/mês** ✅ ou plano negociado | idem | idem |
 
 ### 3.3 Taxa fixa da Tuya diluída (R$/casa/mês)
 
-Cenários 🟡 (US$ 5 mil = app próprio; US$ 25 mil e 50 mil = edições comerciais relatadas em 2022; **valores atuais não confirmados**):
+**Preços de tabela oficiais** ✅: US$ 5 mil = app próprio (1º ano) · US$ 25 mil = IoT Core Flagship · US$ 50 mil = Corporate. **Atenção:** o app próprio **não substitui** o IoT Core se o servidor usar a Open API; nesse caso os custos **somam**.
 
 | Taxa anual | 10 casas | 50 | 100 | 500 | 1.000 | 2.000 |
 |---|---:|---:|---:|---:|---:|---:|
@@ -109,7 +109,9 @@ Cenários 🟡 (US$ 5 mil = app próprio; US$ 25 mil e 50 mil = edições comerc
 | US$ 25.000 (R$ 137.500/ano) | 1.145,8 | 229,2 | 114,6 | 22,9 | 11,5 | 5,7 |
 | US$ 50.000 (R$ 275.000/ano) | 2.291,7 | 458,3 | 229,2 | 45,8 | 22,9 | 11,5 |
 
-**Ponto de equilíbrio** para manter a Tuya ≤ R$ 10/casa/mês: **≈ 230 casas** (US$ 5 mil) · **≈ 1.150** (US$ 25 mil) · **≈ 2.300** (US$ 50 mil).
+**Ponto de equilíbrio** para manter a Tuya ≤ R$ 10/casa/mês: **≈ 230 casas** (US$ 5 mil) · **≈ 1.150** (US$ 25 mil) · **≈ 2.300** (US$ 50 mil). Se forem necessários **App SDK + IoT Core** (US$ 30 mil no 1º ano, US$ 27 mil depois): **≈ 1.375** casas no 1º ano.
+
+Além da taxa fixa: o **excedente** custa US$ 3,15/M chamadas e US$ 1,24/M mensagens ✅; uma tomada com medidor reportando a cada 10 s gera ~259 mil mensagens/mês (≈ US$ 0,32/mês), irrelevante frente à taxa fixa, mas decisiva no Trial.
 
 ### 3.4 Esforço de desenvolvimento (pessoa-semanas; 1 dev sênior full-stack com apoio de IA)
 
@@ -122,6 +124,7 @@ Cenários 🟡 (US$ 5 mil = app próprio; US$ 25 mil e 50 mil = edições comerc
 | MVP 3 | 14–20 | Gerador de planta é a parte grande |
 | Skill Alexa própria | 4–6 | + OAuth + certificação (prazo 🔬) |
 | Edge Box (plano B) | 10–16 | Zigbee + LAN + atualização remota |
+| App próprio (Arquitetura D) | 10–16 🔬 | App híbrido + ponte WebView↔SDK; **estimativa minha**, depende do SDK |
 | Arte 3D (3 templates) | 6–10 dias de artista | R$ 1,5–4 mil por template 🟡 |
 
 ### 3.5 Operação 🟡
@@ -153,7 +156,7 @@ R$ 39 − taxas 4 % (R$ 1,56) − infra (≈ R$ 4 a ~100 casas) − suporte (≈
 | R$ 23 (US$ 25 mil com 500 casas) | R$ 1,4 | 4 % |
 | R$ 46 (US$ 50 mil com 500 casas, ou US$ 25 mil com ~250) | **negativa** | — |
 
-**É por isso que o custo da nuvem da Tuya é o Portão 1**: com a taxa errada, a assinatura não paga a própria infraestrutura.
+**É por isso que o custo da nuvem da Tuya é o Portão 1**: com a taxa de tabela (US$ 25 mil/ano) e menos de ~1.000 casas, a assinatura não paga a própria infraestrutura.
 
 ## 5. Modelo de negócio
 
@@ -169,7 +172,7 @@ R$ 39 − taxas 4 % (R$ 1,56) − infra (≈ R$ 4 a ~100 casas) − suporte (≈
 
 1. **Agora — caixa:** *instalação premium com 3D* em **preço fechado**, **50 % de sinal**, assinatura **opcional** nos primeiros pilotos (12 meses incluídos em Conforto/Premium). Quem paga o hardware é o sinal do cliente, não o seu capital.
 2. **Após o Portão 1:** assinatura passa a **padrão** (R$ 29–49/mês ou anual R$ 299–449), dimensionada pela taxa real da nuvem.
-3. **Após ~5 casas estáveis:** **licenciar para instaladores** (marca branca): taxa de adesão + R$ 9–15 por casa ativa/mês (hipótese). É aqui que a plataforma, e não a sua agenda, vira o ativo.
+3. **Após ~5 casas estáveis:** **licenciar para instaladores** (marca branca): taxa de adesão + R$ 9–15 por casa ativa/mês (hipótese). É aqui que a plataforma, e não a sua agenda, vira o ativo. **Cuidado:** a licença da Tuya é **não sublicenciável** ✅; a marca branca exige **ordem de serviço** que a permita ou **um projeto Tuya por parceiro**.
 
 ### Onde vender primeiro (validar 2 nichos em paralelo)
 
@@ -199,19 +202,21 @@ Premissas de prazo: 1 dev com apoio de IA; **não** inclui skill Alexa própria 
 
 | # | Risco | Prob. | Impacto | Mitigação | Sinal precoce |
 |---|---|:-:|:-:|---|---|
-| 1 | **Licença/preço comercial da nuvem Tuya** inviabiliza a assinatura | Média–alta | **Crítico** | Portão 1; `ProviderAdapter`; plano B **Edge** (Zigbee + LAN, licenças MIT); considerar App SDK | Resposta da Tuya; trial estourando |
-| 2 | **Mudança de regras/cotas** da Tuya (trial, data center, API) | Média | Alto | Evento em vez de polling; contrato; monitorar avisos; camada de adaptação | E-mails de cota; erros de API |
-| 3 | **Fechadura**: API não disponível no modelo, falha de segurança ou responsabilidade civil | Média | Alto | Teste por modelo (S4); `can_unlock` + PIN + auditoria; sem fail-open; termo; seguro | Teste S4 falha |
-| 4 | **Custo do 3D por cliente** explode | Média | Alto | Templates + gerador; orçamentos de desempenho; "sob medida" cobrado à parte | Horas de arte por casa > 2 |
-| 5 | **Suporte** (Wi-Fi, firmware, bateria) consome a margem | **Alta** | Médio–alto | Catálogo homologado; Zigbee-first; painel de saúde; guia do roteador | > 1 chamado/casa/mês |
-| 6 | **Regulatório**: Anatel, INMETRO, NBR 5410, LGPD | Média | Alto | Fornecedores nacionais com NF; sem obra em quadro sem eletricista; advogado | Produto sem selo no catálogo |
-| 7 | **Diferencial fraco** (SmartThings já inclui Map View 3D no app; apps de fabricantes) | Média | Alto | Posicionar a **entrega completa** (instalação + 3D personalizado + pt-BR + Alexa); medir H1–H3 | H1 < 3/10 |
-| 8 | **Desempenho** em celulares fracos/TVs | Média | Médio | Orçamentos, modo lista, S6 | FPS < 30 no aparelho-alvo |
-| 9 | **Segurança/privacidade** (vazamento de presença, comandos indevidos) | Baixa–média | Alto | RLS, MFA, auditoria, retenção; teste de invasão antes do 1.0 | — |
-| 10 | **Alexa própria**: certificação/OAuth atrasam | Média | Médio | Usar Smart Life no MVP; só construir se necessário | Pedido de "cenas por voz" |
-| 11 | **Pessoa-chave / equipe pequena** | Média | Médio | Documentação, testes, ADRs (já iniciados) | — |
-| 12 | **Caixa**: capital de giro em hardware | Média | Médio | Sinal de 50 %; compra sob demanda | Pedidos antes do sinal |
-| 13 | **Licença da referência**: reaproveitar código sem permissão | Baixa | Médio | Reuso só com licença do autor ([02](02-referencia-igreja-3d.md)) | — |
+| 1 | **Custo da nuvem Tuya** inviabiliza a assinatura: **Flagship US$ 25 mil/ano** ✅; o Trial **proíbe uso comercial** ✅ | **Alta** | **Crítico** | Portão 1; `ProviderAdapter`; plano B **Edge Zigbee (E)** ou **app próprio (B/D)**; plano negociado | Resposta da Tuya; qualquer cliente antes do acordo |
+| 2 | **Contrato Tuya**: licença **não sublicenciável**, vedações 3-ix/3-xi, **suspensão sem aviso**, responsabilidade limitada a US$ 5 mil, foro da Califórnia ✅ | Média–alta | **Crítico** | **Ordem de serviço escrita** que permita atender terceiros; plano B pronto; Alexa/Smart Life seguem independentes; ensaio de contingência | Cláusulas recusadas; avisos de suspensão |
+| 3 | **Limite de 4 comandos/s por projeto** ✅ trava cenas em muitas casas | Média | Alto | Fila com *token bucket*; cenas nativas; *jitter* em automações; Edge; pedir limite maior ([03](03-arquitetura-e-stack.md) §5.1) | Erros 1110/1199; fila > 10 s |
+| 4 | **Mudança de regras/cotas/data center** da Tuya (houve migração do Brasil para *Eastern America* em 2025-11-25 ✅) | Média | Alto | Evento em vez de polling; configurar data center por casa; monitorar avisos | Dispositivos sumindo da lista; erro 2007 |
+| 5 | **Fechadura**: serviço separado, firmware sem chave em nuvem (DP 49/50), falha de segurança ou responsabilidade civil | Média | Alto | Teste por modelo (S4); `can_unlock` + PIN + auditoria; sem fail-open; termo; seguro | S4 falha |
+| 6 | **Custo do 3D por cliente** explode | Média | Alto | Templates + gerador; orçamentos de desempenho; "sob medida" cobrado à parte | Horas de arte por casa > 2 |
+| 7 | **Suporte** (Wi-Fi, firmware, bateria) consome a margem | **Alta** | Médio–alto | Catálogo homologado; Zigbee-first; painel de saúde; guia do roteador | > 1 chamado/casa/mês |
+| 8 | **Regulatório**: Anatel, INMETRO, NBR 5410, LGPD (a Tuya exige que **você** responda pela privacidade ✅) | Média | Alto | Fornecedores nacionais com NF; sem obra em quadro sem eletricista; advogado; política de privacidade | Produto sem selo no catálogo |
+| 9 | **Diferencial fraco** (SmartThings já inclui Map View 3D no app; apps de fabricantes) | Média | Alto | Posicionar a **entrega completa** (instalação + 3D personalizado + pt-BR + Alexa); medir H1–H3 | H1 < 3/10 |
+| 10 | **Desempenho** em celulares fracos/TVs | Média | Médio | Orçamentos, modo lista, S6 | FPS < 30 no aparelho-alvo |
+| 11 | **Segurança/privacidade** (vazamento de presença, comandos indevidos) | Baixa–média | Alto | RLS, MFA, auditoria, retenção; teste de invasão antes do 1.0 | — |
+| 12 | **Add-on Alexa próprio**: certificação (prazo não publicado), OAuth e exigência de dispositivo online 24/7 no teste | Média | Médio | Usar Smart Life no MVP; só construir se necessário | Pedido de "cenas por voz" |
+| 13 | **Pessoa-chave / equipe pequena** | Média | Médio | Documentação, testes, ADRs (já iniciados) | — |
+| 14 | **Caixa**: capital de giro em hardware | Média | Médio | Sinal de 50 %; compra sob demanda | Pedidos antes do sinal |
+| 15 | **Licença da referência**: reaproveitar código sem permissão | Baixa | Médio | Reuso só com licença do autor ([02](02-referencia-igreja-3d.md)) | — |
 
 ## 8. Resposta à pergunta central
 
@@ -219,12 +224,12 @@ Premissas de prazo: 1 dev com apoio de IA; **não** inclui skill Alexa própria 
 
 **Sim — com uma condição bloqueante e quatro correções de premissa.**
 
-- **Tecnicamente: sim, com alta confiança.** Cada peça foi **verificada**: assinatura, token e Pulsar da Tuya compatíveis byte a byte com o SDK oficial (22 testes); IR, status e comandos mapeados em código aberto; modelo multi-tenant com 50 asserções em PostgreSQL 16; stack 3D madura (`extras` do glTF → `userData` confirmado no código do Three.js; `frameloop="demand"` confirmado no R3F).
-- **Comercialmente: sim, se** o custo de acesso comercial à nuvem da Tuya couber (≤ ~R$ 10 por casa/mês) **ou** se adotarmos o plano B local. O trial gratuito (50 dispositivos / 10 controláveis 🟡) **não sustenta nem um piloto de 3 casas**, e as edições comerciais foram relatadas em **US$ 25–50 mil/ano** 🟡 (2022; preço atual **não confirmado** porque o site da Tuya está bloqueado nesta sessão). Sem acordo, a assinatura só fecha acima de ~1.000 casas.
+- **Tecnicamente: sim, com alta confiança.** Cada peça foi **verificada**: assinatura, token e Pulsar da Tuya compatíveis byte a byte com o SDK oficial e com a doc oficial (27 testes); IR, status e eventos mapeados em fonte primária; modelo multi-tenant com 50 asserções em PostgreSQL 16; stack 3D madura (`extras` do glTF → `userData` confirmado no código do Three.js; `frameloop="demand"` confirmado no R3F). **Ainda falta** uma chamada real à Tuya (S1).
+- **Comercialmente: sim, se** o acesso comercial à nuvem da Tuya couber (≤ ~R$ 10 por casa/mês) **e** o contrato permitir atender terceiros, **ou** se adotarmos o plano B. **Fatos oficiais ✅:** o Trial (50 dispositivos / 10 controláveis) é **só para depuração e proíbe uso comercial**; a edição comercial mínima, **Flagship, custa US$ 25 mil/ano**; o app próprio custa US$ 5 mil + US$ 2 mil/ano mas **não dá acesso à Open API**; a licença é **não sublicenciável** e a Tuya limita o envio de comandos a **4/s por projeto**. Sem acordo, a assinatura só fecha acima de ~1.000 casas.
 
 **Premissas a alterar:**
 
-1. ~~"Tuya Cloud como backbone para todos os clientes desde o dia 1."~~ → **Tuya Cloud no POC e na 1ª casa**; **Portão 1** antes de piloto pago; **plano B** Edge local (Zigbee + LAN) pronto no desenho.
+1. ~~"Tuya Cloud como backbone para todos os clientes desde o dia 1."~~ → **Tuya Cloud (Trial) só no POC, na sua casa**; **Portão 1** (preço **e** contrato) antes de qualquer cliente, mesmo pago; **plano B** pronto no desenho: **Edge Zigbee** (independente da nuvem) ou **app próprio**. Nota: o controle LAN de dispositivos Wi-Fi **não** elimina a Tuya, pois a `local_key` vem da conta de nuvem.
 2. ~~"3D é o diferencial."~~ → o diferencial é a **entrega completa**: **3D do apê do cliente + instalação + suporte pt-BR + voz + preço**. A Samsung já inclui um Map View 3D no app SmartThings.
 3. ~~"Alexa como parte da arquitetura."~~ → Alexa é **voz paralela** (skill Smart Life), não backend nem fonte de eventos; skill própria só na Fase 3.
 4. ~~"Plug-and-play total."~~ → **assistido** no MVP (importação + auto-match + piscar); autoatendimento só com App SDK/QR.
@@ -233,19 +238,19 @@ Premissas de prazo: 1 dev com apoio de IA; **não** inclui skill Alexa própria 
 
 | Pergunta | Resposta |
 |---|---|
-| Qual arquitetura? | **B com costuras de C**: PWA 3D → Supabase + Core Node → `ProviderAdapter` (Tuya primeiro; Edge depois). [03](03-arquitetura-e-stack.md) |
+| Qual arquitetura? | **B no POC, com costuras de C e D**: PWA 3D → Supabase + Core Node → `ProviderAdapter` (Tuya primeiro; Edge ou app próprio conforme o Portão 1). [03](03-arquitetura-e-stack.md) |
 | Qual stack? | React 19 + R3F/Three.js + Vite + PWA · Node 22/Fastify · Supabase (SP) · Cloudflare Pages · Fly.io/VPS |
 | Qual MVP? | POC (1 cômodo, 3 dispositivos, voz Smart Life) → MVP 1 pagante após o Portão 1 |
 | Qual hardware? | Lâmpadas Wi-Fi, hub IR, sensores **Zigbee** com gateway, tomadas com medidor; fechadura só no MVP 2 após teste do modelo |
 | Qual modelo de implantação? | Assistido por console do instalador, templates e auto-match; ≤ 4 h por apê |
 | Qual modelo de negócio? | Instalação premium com 3D e sinal de 50 % → assinatura após o Portão 1 → licença para instaladores |
-| Maiores riscos? | **Custo/termos da Tuya**, fechadura, custo do 3D por cliente, suporte, diferencial vs. SmartThings, regulatório |
+| Maiores riscos? | **Custo e contrato da Tuya** (US$ 25 mil/ano, não sublicenciável, suspensão sem aviso), limite de 4 comandos/s, fechadura, custo do 3D por cliente, suporte, diferencial vs. SmartThings, regulatório |
 
 ## 9. Próximos 14 dias
 
-1. **Liberar os hosts bloqueados** (ver [01](01-evidencias-e-pesquisa.md) §1) para eu **confirmar** preços e termos da Tuya, pontos da Alexa e preços do Supabase.
-2. **Enviar o e-mail à Tuya** (modelo em [01](01-evidencias-e-pesquisa.md) §5).
-3. **S1–S3** com `poc/tuya-core`: conta, projeto, vínculo, lâmpada, IR, sensor, evento.
-4. **S5** (Alexa/Smart Life) e **S6** (GLB de teste em 3–4 aparelhos).
-5. **Escolher o apê-piloto** e 10 prospects para as demos (H1/H2); definir os 2 nichos.
-6. **Cotar** hardware (3 fornecedores nacionais com NF) e **modelagem 3D** do 1º template.
+1. **Enviar o e-mail à Tuya** para **vip@tuya.com** (modelo em [01](01-evidencias-e-pesquisa.md) §7): preço/plano para integrador, **ordem de serviço** que permita atender terceiros, limite de comandos, data center do Brasil, fechaduras e IR, *Smart Voice*.
+2. **S1, S1b e S2** com `poc/tuya-core` (conta *Smart Home*, data center, vínculo, lâmpada, IR, evento, teste de *throttling*) — dentro do Trial, **na sua casa**.
+3. **S3** (sensores/energia) e **S5** (Alexa/Smart Life), **S6** (GLB de teste em 3–4 aparelhos).
+4. **Escolher o apê-piloto** e 10 prospects para as demos (H1/H2); definir os 2 nichos. **Sem cobrar ninguém antes do Portão 1.**
+5. **Cotar** hardware (3 fornecedores nacionais com NF) e **modelagem 3D** do 1º template.
+6. Avaliar em paralelo o **App SDK em edição de desenvolvimento (grátis)**: um app de teste com a ponte WebView↔SDK mostra se a **Arquitetura D** é viável 🔬.

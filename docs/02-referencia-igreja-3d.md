@@ -1,6 +1,6 @@
 # 02 · Análise da referência: "Igreja 3D"
 
-> **Como foi analisada.** A demo `lgrsv.github.io/igreja-3d-v1` está bloqueada na rede desta sessão. A GitHub Pages publica o repositório público `LGRSV/igreja-3d-v1`, então li o **código-fonte** (clone raso, commit `369a5fd`, 2026-09-30). É a mesma fonte da demo, só que mais completa. Não executei a demo num navegador; as observações de comportamento vêm do README e do código.
+> **Como foi analisada.** Li o **código-fonte** do repositório público `LGRSV/igreja-3d-v1` (clone raso, commit `369a5fd`, 2026-09-30), que é o que a demo `lgrsv.github.io/igreja-3d-v1` publica. As observações de comportamento vêm do README e do código.
 
 ## 1. O que é
 
@@ -39,6 +39,17 @@ Estas são **técnicas**, não código para copiar:
 6. **UX que funciona para leigos:** *Vista de cima navegável* (bloco → cômodo → aparelho, com trilha clicável e "Voltar"), painel inferior com abas (ambientes, rotinas, automações, atividade), contador "N de M luzes acesas", feedback otimista no clique.
 7. **Estado visível de relance:** LED do ar por modo, porta que abre, telão aceso.
 8. **Testes automatizados da camada visual** rodando sem GPU.
+
+## 3.1 A demo rodando (observação)
+
+Renderizei a demo (v1.5.5) em Chromium **sem GPU** (SwiftShader), com o Three.js servido localmente. O próprio card detectou o renderizador por software e foi para o nível `min`, com o log *"malhas estáticas: 4871 → 238 draw calls · luzes reais: 7 (0 com sombra) · qualidade: min"* e o **governador de qualidade descendo degraus** sozinho: o comportamento descrito no README se confirma. Por isso a imagem em si ficou simplificada (sem sombras, resolução reduzida); em GPU real o README indica um nível visual bem maior. O que a execução mostrou sobre a **experiência**:
+
+- **A tela é metade 3D, metade cartões.** O 3D ocupa a parte superior; **abaixo há um painel de vidro com abas** (*Ambientes · Automações · Atividade*), filtros por área e **cartões de dispositivo** com ícone, estado ("acesa · 100%", "ligado", "Frio · 22° · 24,5° atual"), **tempo desde a última mudança** ("há 6 min") e brilho colorido por tipo (roxo no palco, âmbar nas luzes, azul no ar, rosa na presença). Um contador resume: **"9 de 14 luzes acesas"**. Ou seja: **a lista é parte central da interface, não um plano B**; o 3D dá o contexto espacial.
+- **Estado refletido de verdade:** ao "acender tudo", a câmera **voou até o ar-condicionado que ligou**, com o fluxo de ar aparecendo; na **Vista de cima**, a trilha *‹ Voltar · Planta › Templo* e os selos de ❄ nos ares ligados.
+- **Barra de ferramentas carregada:** nove botões no topo (*Auto/Dia/Noite, Visão noturna, Rótulos, Recentrar, Vista de cima, Pessoa, bonequinho, Fachada, Painel*). É ótimo para quem opera um prédio; **para o cliente de um apartamento é excesso**. No produto, manter só *Recentrar*, *Rótulos* e (depois) *Vista de cima*.
+- **Escala do modelo:** um templo de 414 cadeiras e ~14 ambientes. Um apartamento de 45 m² é **muito mais simples** de renderizar; o orçamento de desempenho de [05](05-painel-3d-e-valor-percebido.md) tem folga.
+
+> As capturas de tela **não** foram adicionadas ao repositório: o projeto da referência não tem licença.
 
 ## 4. O que ela mostra sobre custo (a lição central)
 

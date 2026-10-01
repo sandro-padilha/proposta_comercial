@@ -136,7 +136,7 @@ Cada `kind` tem um componente R3F que mapeia **estado → visual**. Nenhum códi
 - **Barra de estado de relance:** `3 luzes acesas · porta trancada · 1,42 kW · ar do quarto ligado`. Aqui está **metade do valor**: responder "está tudo certo em casa?" em 1 segundo.
 - **Câmera por ambiente** (botões `Sala / Quarto / Cozinha`) em vez de navegação livre desde o dia 1.
 - **Cenas na base** (*Cheguei*, *Boa noite*, *Cinema*) e **folha de detalhes** (bottom sheet) para dimmer, ar e fechadura.
-- **Modo lista/cartões sempre disponível** (acessibilidade, TV, aparelhos fracos, perda do WebGL).
+- **Cartões de dispositivo junto do 3D, não só como reserva.** A referência rodando ([02](02-referencia-igreja-3d.md) §3.1) divide a tela entre o 3D e um painel de cartões com estado, "há 6 min" e o contador "9 de 14 luzes acesas". Adotar o mesmo: **3D = contexto espacial; cartões = controle preciso**; no celular, o painel vira *bottom sheet*. Funciona também como modo lista (acessibilidade, TV, aparelhos fracos, perda do WebGL).
 - Estados explícitos: *carregando*, *sem conexão — último estado às 21:42*, *dispositivo offline*, *comando sem resposta*.
 - Alvos de toque ≥ 44 px, `prefers-reduced-motion`, legendas legíveis, contraste.
 - Atualização otimista com reversão em ~5 s.

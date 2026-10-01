@@ -3,7 +3,7 @@
 ## 1. Princípios
 
 1. **Somos uma camada adicional, não o caminho crítico.** Voz (Alexa/Smart Life), interruptores físicos e o app do fabricante continuam funcionando se **nossa** plataforma cair.
-2. **Segredos só no servidor.** A Open API da Tuya exige assinar cada requisição com o *Access Secret* ([01](01-evidencias-e-pesquisa.md), T11): é impossível chamá-la direto do navegador sem expor a credencial.
+2. **Segredos só no servidor.** A Open API da Tuya exige assinar cada requisição com o *Access Secret* ([01](01-evidencias-e-pesquisa.md), T16): é impossível chamá-la direto do navegador sem expor a credencial.
 3. **Eventos em vez de polling.** O orçamento de cota torna o polling inviável (seção 5).
 4. **Provedor por trás de uma interface (adapter).** Tuya Cloud é o primeiro adaptador; o segundo (local/Zigbee) entra sem reescrever painel, banco nem regras.
 5. **Cena é dado.** Template GLB + manifesto + vínculos; nenhum código novo por cliente ([05](05-painel-3d-e-valor-percebido.md)).
@@ -25,26 +25,42 @@ Igual a B, com vários adaptadores (Tuya Cloud, **Edge Box local** com Zigbee/LA
 | Critério | A · Direto | B · Backend + Tuya | C · Backend + multi-plataforma |
 |---|---|---|---|
 | Custo inicial | ≈ 0 | Baixo (R$ 150–250/mês de infra) | Médio (Edge Box ≈ R$ 300–600 por casa + engenharia) |
-| Custo recorrente por casa | n/a | Infra ≈ R$ 2–5 **+ taxa Tuya (a definir; ver Portão 1)** | Infra + suporte; **sem taxa Tuya** nos dispositivos locais |
+| Custo recorrente por casa | n/a | Infra ≈ R$ 2–5 **+ Flagship US$ 25 mil/ano** ✅ (≈ R$ 11,5/casa/mês com 1.000 casas; ≈ R$ 115 com 100) | Infra + suporte; **sem taxa Tuya** nos dispositivos Zigbee; Wi-Fi/LAN ainda exige a `local_key`, que vem da conta de nuvem ✅ |
 | Complexidade | Mínima | Média | Alta |
 | Velocidade de desenvolvimento | Dias | **4–8 semanas até piloto** | 3–5 meses |
 | Segurança | ⛔ Segredo exposto | Boa (segredos no servidor, RLS) | Boa; mais superfície (Edge Box, atualização remota) |
-| Escalabilidade | Nenhuma | Alta até cotas/custos da Tuya | **A mais alta** |
+| Escalabilidade | Nenhuma | Limitada por **4 comandos/s por projeto** ✅ (seção 5) e pelo custo da Flagship | **A mais alta** |
 | Dependência de terceiros | Total (Tuya + navegador) | **Alta: Tuya Cloud + internet** | Baixa (funciona na LAN sem internet) |
 | Manutenção | n/a | Baixa | Média (drivers/firmware de dispositivos) |
 | Margem | n/a | **Depende da taxa Tuya** | Melhor em escala |
 | Experiência do cliente | Frágil | Boa; sem internet = sem painel | **Melhor**: rápida e resiliente |
 | Expansão futura | Nenhuma | Boa, **se houver adapters desde o início** | Máxima |
 
+### D · App próprio sobre o App SDK da Tuya (sem IoT Core)
+
+Alternativa que as fontes oficiais revelaram: em vez de uma plataforma web falando com a Open API, **um app com a sua marca** feito com o *Smart Life App SDK* (*Self-Developed App*: **US$ 5 mil no 1º ano e US$ 2 mil depois, usuários ilimitados** ✅, [01](01-evidencias-e-pesquisa.md) T8). Pareamento (EZ/AP/QR/BLE), controle e contas ficam no SDK; o **painel 3D roda em WebView** dentro do app, com uma ponte para o SDK 🔬.
+
+| Prós | Contras |
+|---|---|
+| Custo fixo baixo e **independente do número de casas** (a cota de 100 M é do SDK) | **Sem PWA/web**: exige app nativo/híbrido (iOS + Android), lojas e a ponte WebView↔SDK 🔬 |
+| **Plug-and-play de verdade**: o pareamento nativo da Tuya dentro da sua marca (Nível 3 de [07](07-plug-and-play-e-instalacao.md)) | Sem IoT Core **não há API de nuvem no servidor**: cenas, automações e alertas dependem do app ou das cenas nativas da Tuya; sem motor próprio no servidor |
+| Não passa pelo limite de 4 comandos/s do projeto de nuvem 🔬 | Dispositivos ficam na conta do **seu app**: a skill **Smart Life** da Alexa **não os enxerga**; a voz exige o serviço *Smart Voice* da Tuya (preço a pedir) ou skill própria |
+| Dados e usuários na sua marca, com domínio próprio | Para ter também backend/Open API é preciso **somar o IoT Core (US$ 25 mil)** ✅ T9 |
+
+A edição de **desenvolvimento** do App SDK é **gratuita** (≤ 100 usuários, 100 mil chamadas/mês) ✅ e permite prototipar o app sem pagar.
+
 ### Recomendação
 
-**Arquitetura B, desenhada com as costuras da C.** Isto é: backend próprio + Tuya Cloud como **primeiro** adaptador, com a interface `ProviderAdapter` e o modelo de dados já independentes de fornecedor. Motivos:
+**Arquitetura B no POC, desenhada com as costuras de C e D.** Backend próprio + Tuya Cloud como **primeiro** adaptador, com `ProviderAdapter` e modelo de dados independentes de fornecedor.
 
-- É a única que entrega **POC em 3–5 semanas** e **piloto em 8–12**, que é o que valida o mercado.
-- A taxa comercial da Tuya é a maior incógnita; uma interface de provedor é o **seguro** contra ela.
-- O *Edge Box* só vale a pena construir **depois** do Portão 1 (resposta da Tuya) ou se o piloto mostrar que a falta de internet incomoda.
+- **POC na sua casa com o Trial é exatamente o uso permitido** ("desenvolvedor individual / depuração"). **O Trial proíbe uso comercial** ✅ (T3): qualquer cliente, mesmo piloto pago, exige antes o **Portão 1**.
+- É a única que entrega **POC em 3–5 semanas**; o piloto depende da resposta da Tuya.
+- A Tuya é a maior incógnita **de preço e de contrato**: a interface de provedor é o **seguro** contra ela.
+- O *Edge Box* e o app próprio só valem a pena **depois** do Portão 1.
 
-**Regra de migração B → C:** migrar quando (a) a Tuya não oferecer custo ≤ ~R$ 10/casa/mês, **ou** (b) ≥ 10 casas ativas e > 1 incidente/mês por queda de nuvem, **ou** (c) fechaduras/segurança entrarem no escopo central.
+**Regra de decisão no Portão 1** ([01](01-evidencias-e-pesquisa.md) §8): **B** (Flagship ou plano negociado) se custo e termos couberem; **D** se o produto puder ser centrado em app; **C** se a independência de nuvem for prioridade.
+
+**Regra de migração B → C:** migrar quando (a) a Tuya não oferecer custo ≤ ~R$ 10/casa/mês **ou** o contrato não permitir uso em benefício de terceiros; (b) ≥ 10 casas ativas e > 1 incidente/mês por queda de nuvem; (c) fechaduras/segurança entrarem no escopo central; (d) o limite de 4 comandos/s virar gargalo.
 
 ## 3. Arquitetura recomendada
 
@@ -86,6 +102,7 @@ Pontos de atenção:
 
 - **Alexa não está no caminho de dados.** Ela fala com a Tuya diretamente (skill Smart Life). Isso é uma *feature de resiliência*: voz funciona mesmo com o nosso servidor fora ([04](04-integracao-tuya-e-alexa.md)).
 - O painel lê **do nosso banco**, não da Tuya: nenhuma abertura de painel consome cota da Tuya.
+- **Projeto Tuya do tipo *Smart Home*, no data center da conta** (Brasil: *Eastern America* para apps novos ✅; app Smart Life 🔬). A Tuya **proíbe chamadas vindas de outra região** (erro 2007 ✅): hospede o Core **nas Américas**.
 
 ## 4. Fluxos de dados
 
@@ -122,7 +139,7 @@ Sensor → Tuya Cloud → Pulsar WS → Core: normaliza e grava estado/evento
 
 ## 5. Orçamento de cota: por que *polling é proibido*
 
-Cálculos (premissa: trial de 26 mil chamadas e 68 mil mensagens/mês; ver T2, 🟡):
+Cálculos (cota oficial do Trial: 26 mil chamadas e 68 mil mensagens/mês ✅, T2; a Flagship tem 224 M e 568 M):
 
 | Cenário | Consumo mensal | Contra a cota |
 |---|---|---|
@@ -132,6 +149,25 @@ Cálculos (premissa: trial de 26 mil chamadas e 68 mil mensagens/mês; ver T2, �
 | Uso real por comandos (≈ 40/dia numa casa) | 1.200 chamadas | 4,6 % |
 
 Regras decorrentes: **estado vem de eventos**; consulta direta só *sob demanda* (ex.: botão "atualizar") e com limite; **medidores de energia** exigem atenção (frequência de relatório do firmware 🔬 — S3) e podem pesar nas **mensagens**.
+
+### 5.1 O limite que decide a escala: 4 comandos por segundo **por projeto**
+
+A tabela oficial de limites ✅ (T23) fixa, **por projeto de nuvem**: enviar propriedades **4/s**, enviar ações 4/s, ler propriedades 50/s, ler estado 5/s, **disparar cena 10/s**. Como todas as casas dividiriam o mesmo projeto, o limite é **global**.
+
+| Cena de 8 ações disparada ao mesmo tempo em… | Tempo para drenar a fila a 4 comandos/s |
+|---|---|
+| 1 casa | 2 s |
+| 10 casas | 20 s |
+| 100 casas | 200 s (3 min 20 s) |
+| 1.000 casas | 2.000 s (33 min) |
+
+Mitigações (a validar no S1b; a tabela cobre as APIs v2.0, e a rota v1.0 de comandos não tem limite publicado):
+
+1. **Fila com *token bucket* global** de 4/s por projeto, com prioridade: comando manual › cena › automação.
+2. **Cenas nativas da Tuya** (disparo 10/s): **uma chamada executa N ações dentro da Tuya** 🔬.
+3. **Escalonar automações** com *jitter* (ex.: "Boa noite" às 22:00 ± 5 min).
+4. **Progresso visível** no 3D ("3 de 8") para que a espera não pareça falha.
+5. **Edge local** para cenas (sem limite de nuvem) e **pedir limite maior** à Tuya (pergunta 4 do e-mail).
 
 ## 6. Interface de provedor (contrato)
 
@@ -170,9 +206,9 @@ Tudo acima do adaptador fala **capacidades** (`power`, `brightness`, `hvac`, `lo
 | **3D** | `three` 0.186 + `@react-three/fiber` 9.8 + `@react-three/drei` 10.7 | Modelo declarativo estado → visual; `frameloop="demand"`; maior ecossistema. Alternativa: Babylon.js 9 (mais pesado, ferramentas melhores, integração React menos natural) |
 | **Frontend** | React 19 + TypeScript + Vite 8, `zustand` (estado), PWA com Workbox 7 | Rápido de desenvolver; PWA cobre celular/tablet/desktop; Capacitor 8 empacota depois |
 | **Backend** | Node 22 + Fastify 5 + TypeScript (1 serviço: API + worker Pulsar + motor de cenas) | Mesmo idioma do front; WebSocket do Pulsar sem cliente nativo (`ws`); código de integração já validado em `poc/tuya-core` |
-| **Banco / Auth / Realtime / Storage** | **Supabase** (Postgres) | RLS multi-tenant pronto, Auth, Realtime e Storage; schema portátil (Postgres puro). Alternativas: Neon/RDS + auth próprio; PocketBase só para POC |
-| **Hospedagem** | Frontend: Cloudflare Pages · Core: Fly.io ou VPS (US$ 5–15/mês) · Banco: Supabase em **região São Paulo** 🟡 (confirmar disponibilidade; LGPD/latência) | Processo longo (Pulsar) não cabe em serverless; frontend estático é grátis |
-| **APIs** | Tuya Open API + Message Service; (Fase 3) Alexa Smart Home Skill | Ver [04](04-integracao-tuya-e-alexa.md) |
+| **Banco / Auth / Realtime / Storage** | **Supabase** (Postgres) — **Pro a partir de US$ 25/mês** ✅ | RLS multi-tenant pronto, Auth, Realtime e Storage; schema portátil (Postgres puro). Alternativas: Neon/RDS + auth próprio; PocketBase só para POC |
+| **Hospedagem** | Frontend: Cloudflare Pages · Core: Fly.io ou VPS **nas Américas** (US$ 5–15/mês) · Banco: Supabase **São Paulo (`sa-east-1`)** ✅ | Processo longo (Pulsar) não cabe em serverless; a Tuya veda chamadas de outra região (erro 2007); frontend estático é grátis |
+| **APIs** | Tuya Open API + Message Service; (Fase 3) Alexa Smart Home *add-on* | Ver [04](04-integracao-tuya-e-alexa.md) |
 | **Autenticação** | Supabase Auth (e-mail/OTP no MVP, MFA para instalador, *passkeys* depois) | Sem senhas para o cliente final |
 | **Push/alertas** | Web Push (VAPID) via PWA; e-mail como reserva; WhatsApp como serviço pago futuro | iOS exige PWA instalada 🟡 |
 | **Observabilidade** | Sentry (erros), logs estruturados, página de status | Planos gratuitos bastam no MVP |
@@ -209,6 +245,7 @@ Tudo acima do adaptador fala **capacidades** (`power`, `brightness`, `hvac`, `lo
 | **API Tuya indisponível** | Idem, mas só do lado nuvem | *Circuit breaker*; painel só-leitura com último estado; backoff; alerta interno; **comandos críticos nunca entram em fila de reenvio** |
 | **Nosso servidor cai** | Painel não atualiza; **Alexa/Smart Life/app Tuya seguem funcionando** (caminho paralelo) | Redeploy automático, health-check, status page; automações críticas de segurança ficam **no dispositivo**, não no nosso servidor |
 | **Navegador/app fecha** | Nada se perde: estado e automações vivem no servidor | Ao reabrir: snapshot + deltas; detecção de dados velhos por `updated_at` |
+| **Tuya suspende ou restringe o projeto** (o contrato, cl. 9, permite fazê-lo **sem aviso prévio** em vários casos ✅) | Painel e comandos param para **todas** as casas de uma vez | `ProviderAdapter`, plano B (D/C), ordem de serviço escrita, monitor de erros 28841xxx/1106 e comunicação ao cliente; Alexa/Smart Life continuam, pois dependem da conta, não do nosso projeto |
 | **Alexa indisponível** | Painel e app Tuya não são afetados | Alexa nunca é dependência de função |
 | **Dispositivo offline** | Tuya informa `online=false` | Selo "offline" no 3D, comando falha rápido com mensagem; reconciliação no evento de volta; alerta se > 24 h |
 
@@ -229,9 +266,9 @@ Tudo acima do adaptador fala **capacidades** (`power`, `brightness`, `hvac`, `lo
 
 | Escala | Gargalo provável | Ação |
 |---|---|---|
-| 1–10 casas | Nenhum; cota da Tuya | Trial só até ~1 casa; Portão 1 antes de piloto pago |
-| 100 casas | Mensagens/chamadas Tuya; suporte | Painel de saúde dos dispositivos; custo de infra ≈ R$ 5/casa/mês |
-| 1.000 casas | Volume de eventos (≈ 15 M/mês); fan-out Realtime | Partições mensais + retenção; canal Realtime por casa; compute maior |
+| 1–10 casas | Nenhum técnico; **contrato** (Trial proíbe uso comercial ✅) | Trial só na **sua** casa (depuração); Portão 1 antes de qualquer cliente |
+| 100 casas | **Taxa fixa da Tuya** (≈ R$ 115/casa/mês no preço de tabela); **4 comandos/s**; suporte | Painel de saúde; fila com *token bucket*; infra ≈ R$ 5/casa/mês |
+| 1.000 casas | Volume de eventos (≈ 15 M/mês); **Realtime: Pro = 500 conexões simultâneas e 500 msg/s** ✅ (10.000 e 2.500 sem *spend cap*); 4 comandos/s | Partições mensais + retenção; canal Realtime por casa; compute maior; cenas nativas/Edge |
 | 10.000 casas | ≈ 150 M eventos/mês (~22 GB/mês); processo único de worker | Particionar workers por região/`org_id`; fila (NATS/Redis Streams); réplica de leitura; Edge Box para tirar carga da nuvem |
 
 Cálculos de volume em [06](06-modelo-de-dados.md) §6 (premissa: 500 eventos/casa/dia).
