@@ -1,0 +1,100 @@
+{
+  "note": "Gerado por tools/gen_fixtures.py com tuya-connector-python 0.1.2 (credenciais fictícias).",
+  "sign": [
+    {
+      "name": "token",
+      "input": {
+        "clientId": "abcdefghij0123456789",
+        "secret": "0123456789abcdef0123456789abcdef",
+        "accessToken": null,
+        "t": 1751000000000,
+        "method": "GET",
+        "path": "/v1.0/token",
+        "query": {
+          "grant_type": 1
+        },
+        "bodyRaw": null
+      },
+      "expected": "7AD0D738A45E1343992896CF548998B416A65D5DFE87F0815644A79CB1C11194"
+    },
+    {
+      "name": "status",
+      "input": {
+        "clientId": "abcdefghij0123456789",
+        "secret": "0123456789abcdef0123456789abcdef",
+        "accessToken": "tok_abc123",
+        "t": 1751000000000,
+        "method": "GET",
+        "path": "/v1.0/iot-03/devices/bf0123456789abcdef/status",
+        "query": null,
+        "bodyRaw": null
+      },
+      "expected": "4DFFC96598F51A45BE86B30D3CF0F7418810C36428F0657FAFA9B15211DBB99D"
+    },
+    {
+      "name": "query-desordenada",
+      "input": {
+        "clientId": "abcdefghij0123456789",
+        "secret": "0123456789abcdef0123456789abcdef",
+        "accessToken": "tok_abc123",
+        "t": 1751000000000,
+        "method": "GET",
+        "path": "/v1.0/iot-03/devices",
+        "query": {
+          "page_size": 20,
+          "last_id": "x1",
+          "category": "dj"
+        },
+        "bodyRaw": null
+      },
+      "expected": "B44DBF75BE7ACD36C767BCA77DEF6B9F8975278670187C1BE5427D38545B1B7C"
+    },
+    {
+      "name": "post-comandos",
+      "input": {
+        "clientId": "abcdefghij0123456789",
+        "secret": "0123456789abcdef0123456789abcdef",
+        "accessToken": "tok_abc123",
+        "t": 1751000000000,
+        "method": "POST",
+        "path": "/v1.0/iot-03/devices/bf0123456789abcdef/commands",
+        "query": null,
+        "bodyRaw": "{\"commands\": [{\"code\": \"switch_led\", \"value\": true}]}"
+      },
+      "expected": "EEB94972A1BCA3C6076ADE207EEDED85F373D4A4D24DFFB0CBC0F90CDE98C3D8"
+    },
+    {
+      "name": "post-ar-condicionado",
+      "input": {
+        "clientId": "abcdefghij0123456789",
+        "secret": "0123456789abcdef0123456789abcdef",
+        "accessToken": "tok_abc123",
+        "t": 1751000000000,
+        "method": "POST",
+        "path": "/v2.0/infrareds/bf01/air-conditioners/bf02/scenes/command",
+        "query": null,
+        "bodyRaw": "{\"power\": 1, \"mode\": 1, \"temp\": 24, \"wind\": 1}"
+      },
+      "expected": "054218C9245BAF2D1A23443F0D21A3C73009EBB9415EF8856CC4DBEA1A2E7C73"
+    }
+  ],
+  "pulsar": {
+    "accessId": "testid1234",
+    "secret": "0123456789abcdef0123456789abcdef",
+    "wsEndpoint": "wss://mqe.tuyaus.com:8285/",
+    "expectedPassword": "5dea8da238d41b2e",
+    "expectedUrl": "wss://mqe.tuyaus.com:8285/ws/v2/consumer/persistent/testid1234/out/event/testid1234-sub?ackTimeoutMillis=3000&subscriptionType=Failover",
+    "event": {
+      "devId": "bf0123456789abcdef",
+      "status": [
+        {
+          "code": "switch_led",
+          "value": true,
+          "t": 1751000000000
+        }
+      ]
+    },
+    "data": "l+JF8N3dN4JRn3IBMuK270n/VT6pLD+XDIEdl1wEVE4o7y6F1xgt3cQ6BcBIup3PnBq2qlZOSZRntcDr0wyOO5vH90JrpBYfcjwUrcrvwSMnIjRIK9mWPIavFt/9cDiV",
+    "frameRaw": "{\"messageId\": \"CAEQ-teste-1\", \"payload\": \"eyJkYXRhIjogImwrSkY4TjNkTjRKUm4zSUJNdUsyNzBuL1ZUNnBMRCtYRElFZGwxd0VWRTRvN3k2RjF4Z3QzY1E2QmNCSXVwM1BuQnEycWxaT1NaUm50Y0RyMHd5T081dkg5MEpycEJZZmNqd1VyY3J2d1NNbklqUklLOW1XUElhdkZ0LzljRGlWIiwgInByb3RvY29sIjogNCwgInB2IjogIjIuMCIsICJzaWduIjogImlnbm9yYWRvIiwgInQiOiAxNzUxMDAwMDAwfQ==\", \"properties\": {}}"
+  }
+}

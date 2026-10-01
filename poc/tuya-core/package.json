@@ -1,0 +1,22 @@
+{
+  "name": "@casa3d/tuya-core-poc",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Blocos de referência para a integração Tuya Cloud (assinatura, cliente, Message Service) — validados contra o SDK Python oficial.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "ws": "^8.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.4",
+    "@types/ws": "^8.18.2",
+    "typescript": "^7.0.2"
+  }
+}
