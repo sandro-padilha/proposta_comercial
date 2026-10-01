@@ -1,14 +1,54 @@
 import { sign } from './sign.ts';
 import type { QueryValue } from './sign.ts';
 
-/** Endpoints regionais (fonte: integração open-source tuya-smart-ir-ac e SDK oficial). */
+/**
+ * Endpoints regionais da Open API.
+ *
+ * - `us` = Western America (Oregon) · `ueaz` = Eastern America (Virginia) · `eu` = Central Europe ·
+ *   `weaz` = Western Europe · `in` · `cn` · `sg`.
+ * - Nomes dos data centers: doc oficial "Data Center". `ueaz`/`weaz` vêm dos nomes originais
+ *   ("America Azure" / "Europe MS") enumerados no SDK oficial.
+ * - **Brasil:** apps registrados desde 2025-11-25 caem no **Eastern America** (`ueaz`); apps anteriores
+ *   ficam no Western America (`us`). Para o app Smart Life a regra exata não está documentada: confirme no
+ *   primeiro vínculo (o data center do projeto precisa casar com o da conta).
+ */
 export const TUYA_API_ENDPOINTS = {
   us: 'https://openapi.tuyaus.com',
+  ueaz: 'https://openapi-ueaz.tuyaus.com',
   eu: 'https://openapi.tuyaeu.com',
+  weaz: 'https://openapi-weaz.tuyaeu.com',
   in: 'https://openapi.tuyain.com',
   cn: 'https://openapi.tuyacn.com',
   sg: 'https://openapi-sg.iotbing.com',
 } as const;
+
+/** Códigos de erro relevantes (página oficial "Global Error Codes"). */
+export const TUYA_ERROR = {
+  SIGN_INVALID: 1004,
+  TOKEN_EXPIRED: 1010,
+  TOKEN_INVALID: 1011,
+  TOKEN_STATUS_INVALID: 1012,
+  PERMISSION_DENIED: 1106,
+  CONCURRENT_LIMIT: 1110,
+  TOO_FREQUENT: 1199,
+  DEVICE_OFFLINE: 2001,
+  IP_CROSS_REGION: 2007,
+  COMMAND_NOT_SUPPORTED: 2008,
+  NO_PLAN: 28841001,
+  PLAN_EXPIRED: 28841002,
+  PLAN_BILL_OVERDUE: 28841003,
+  TRIAL_QUOTA_EXHAUSTED: 28841004,
+  API_NOT_SUBSCRIBED: 28841101,
+  API_QUOTA_EXHAUSTED: 28841104,
+  PROJECT_NOT_AUTHORIZED: 28841105,
+} as const;
+
+/** Erros de token: renovar o token e repetir a chamada uma única vez. */
+const TOKEN_ERROR_CODES = new Set<number>([
+  TUYA_ERROR.TOKEN_EXPIRED,
+  TUYA_ERROR.TOKEN_INVALID,
+  TUYA_ERROR.TOKEN_STATUS_INVALID,
+]);
 
 export interface TuyaClientOptions {
   endpoint: string;
@@ -67,8 +107,6 @@ export interface AcState {
 }
 
 const TOKEN_SKEW_MS = 60_000;
-/** Código de "token inválido" — premissa a validar no primeiro teste real. */
-const TOKEN_INVALID_CODE = 1010;
 
 export class TuyaClient {
   readonly #o: Required<Omit<TuyaClientOptions, 'fetch' | 'now'>> & { fetch: typeof fetch; now: () => number };
@@ -93,7 +131,7 @@ export class TuyaClient {
     try {
       return await this.#send<T>(method, path, opts, token.accessToken);
     } catch (err) {
-      if (!(err instanceof TuyaApiError) || Number(err.code) !== TOKEN_INVALID_CODE) throw err;
+      if (!(err instanceof TuyaApiError) || !TOKEN_ERROR_CODES.has(Number(err.code))) throw err;
       this.#token = undefined; // força novo token e tenta uma única vez
       token = await this.#getToken();
       return this.#send<T>(method, path, opts, token.accessToken);

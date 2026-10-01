@@ -3,7 +3,15 @@ import { once } from 'node:events';
 import type { AddressInfo } from 'node:net';
 import { test } from 'node:test';
 import { WebSocketServer } from 'ws';
-import { PulsarConsumer, UnsupportedEncryptionError, decodeFrame, decryptData, pulsarPassword, pulsarUrl } from '../src/pulsar.ts';
+import {
+  PulsarConsumer,
+  TUYA_PULSAR_ENDPOINTS,
+  UnsupportedEncryptionError,
+  decodeFrame,
+  decryptData,
+  pulsarPassword,
+  pulsarUrl,
+} from '../src/pulsar.ts';
 import fixtures from './fixtures.json' with { type: 'json' };
 
 const p = fixtures.pulsar;
@@ -20,16 +28,21 @@ test('decriptação AES-128-ECB compatível com o SDK', () => {
   assert.deepEqual(JSON.parse(decryptData(p.data, p.secret)), p.event);
 });
 
-test('decodeFrame extrai messageId e evento', () => {
-  const { messageId, event } = decodeFrame(p.frameRaw, p.secret);
-  assert.equal(messageId, 'CAEQ-teste-1');
-  assert.deepEqual(event, p.event);
+test('decodeFrame extrai messageId, protocolo (1ª camada) e evento (2ª camada)', () => {
+  const m = decodeFrame(p.frameRaw, p.secret);
+  assert.equal(m.messageId, 'CAEQ-teste-1');
+  assert.equal(m.protocol, 4);
+  assert.equal(m.pv, '2.0');
+  assert.equal(typeof m.t, 'number');
+  assert.deepEqual(m.event, p.event);
 });
 
-test('modelo GCM é recusado explicitamente (não decifra errado em silêncio)', () => {
-  const inner = Buffer.from(JSON.stringify({ data: 'AAAA', encryptModel: 'aes_gcm' })).toString('base64');
-  const raw = JSON.stringify({ messageId: 'm1', payload: inner });
-  assert.throws(() => decodeFrame(raw, p.secret), UnsupportedEncryptionError);
+test('modo GCM (opcional no console) é recusado explicitamente, sem decifrar errado em silêncio', () => {
+  assert.throws(() => decodeFrame(p.frameRaw, p.secret, 'gcm'), UnsupportedEncryptionError);
+});
+
+test('endpoints: Eastern America (Brasil, apps novos) está disponível', () => {
+  assert.equal(TUYA_PULSAR_ENDPOINTS.ueaz, 'wss://mqe-ueaz.tuyaus.com:8285/');
 });
 
 test('consumidor: valida credenciais no handshake, entrega o evento e faz ACK', async () => {
@@ -49,13 +62,15 @@ test('consumidor: valida credenciais no handshake, entrega o evento e faz ACK', 
   });
 
   const events: unknown[] = [];
+  const metas: Array<{ messageId: string; protocol: number }> = [];
   const got = Promise.withResolvers<void>();
   const consumer = new PulsarConsumer({
     accessId: p.accessId,
     secret: p.secret,
     wsEndpoint: `ws://127.0.0.1:${(wss.address() as AddressInfo).port}/`,
-    onEvent: (e) => {
+    onEvent: (e, meta) => {
       events.push(e);
+      metas.push(meta);
       got.resolve();
     },
     onError: got.reject,
@@ -65,6 +80,7 @@ test('consumidor: valida credenciais no handshake, entrega o evento e faz ACK', 
     await got.promise;
     await new Promise((r) => setTimeout(r, 100)); // dá tempo ao ACK chegar
     assert.deepEqual(events, [p.event]);
+    assert.equal(metas[0]?.protocol, 4, 'o protocolo chega ao handler para classificar a mensagem');
     assert.deepEqual(acks, ['CAEQ-teste-1']);
     assert.equal(seenHeaders[0]?.username, p.accessId);
   } finally {

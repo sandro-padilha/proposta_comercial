@@ -1,14 +1,25 @@
 import { createDecipheriv, createHash } from 'node:crypto';
 import WebSocket from 'ws';
 
-/** Endpoints do Message Service (fonte: integração open-source e SDK oficial). */
+/**
+ * Endpoints WebSocket do Message Service (porta 8285).
+ *
+ * `us`, `eu`, `in`, `cn`, `sg` estão na página oficial do SDK Node. Para **Eastern America (`ueaz`)** e
+ * **Western Europe (`weaz`)** a doc oficial só lista o endpoint Pulsar nativo (`pulsar+ssl://…:7285`); a
+ * URL WebSocket (8285) abaixo é **inferida do mesmo padrão** e precisa de confirmação no primeiro teste.
+ */
 export const TUYA_PULSAR_ENDPOINTS = {
   us: 'wss://mqe.tuyaus.com:8285/',
+  ueaz: 'wss://mqe-ueaz.tuyaus.com:8285/',
   eu: 'wss://mqe.tuyaeu.com:8285/',
+  weaz: 'wss://mqe-weaz.tuyaeu.com:8285/',
   in: 'wss://mqe.tuyain.com:8285/',
   cn: 'wss://mqe.tuyacn.com:8285/',
   sg: 'wss://mqe-sg.iotbing.com:8285/',
 } as const;
+
+/** Modo de criptografia do Message Service. ECB é o padrão ao assinar o serviço; GCM só se ativado no console. */
+export type PulsarEncryption = 'ecb' | 'gcm';
 
 const md5Hex = (s: string): string => createHash('md5').update(s, 'utf8').digest('hex');
 
@@ -23,8 +34,8 @@ export function pulsarUrl(wsEndpoint: string, accessId: string, topic = 'event')
 }
 
 export class UnsupportedEncryptionError extends Error {
-  constructor(model: string) {
-    super(`Modelo de criptografia não suportado: ${model} (apenas o modo ECB do SDK oficial foi implementado)`);
+  constructor(mode: string) {
+    super(`Modo de criptografia não implementado: ${mode} (apenas AES/ECB, o padrão documentado, foi implementado)`);
     this.name = 'UnsupportedEncryptionError';
   }
 }
@@ -41,25 +52,52 @@ export interface PulsarFrame {
   payload: string;
 }
 
-/** Decodifica um quadro recebido: payload (base64) → JSON → campo `data` criptografado. */
-export function decodeFrame(raw: string, secret: string): { messageId: string; event: unknown } {
+export interface DecodedMessage {
+  messageId: string;
+  /**
+   * Número do protocolo (1ª camada). Define o tipo de mensagem: `4` = status de dispositivo (legado),
+   * `20` = online/offline (legado), `1000` = dados do dispositivo (IoT Core), `1001` = gestão de dispositivo.
+   * Configurar os dois conjuntos de protocolo pode duplicar mensagens.
+   */
+  protocol: number;
+  pv: string;
+  /** Carimbo de tempo da 1ª camada. */
+  t: number;
+  /** 2ª camada, já decifrada (ex.: `{ devId, status: [{ code, value, t }] }` no protocolo 4). */
+  event: unknown;
+}
+
+/**
+ * Decodifica um quadro recebido. Formato oficial em duas camadas: `payload` (base64) → JSON com
+ * `{ data, protocol, pv, t, sign }` → `data` cifrado (chave = 16 caracteres do meio do Access Secret).
+ */
+export function decodeFrame(raw: string, secret: string, encryption: PulsarEncryption = 'ecb'): DecodedMessage {
+  if (encryption !== 'ecb') throw new UnsupportedEncryptionError(encryption);
   const frame = JSON.parse(raw) as PulsarFrame;
   const inner = JSON.parse(Buffer.from(frame.payload, 'base64').toString('utf8')) as {
     data: string;
-    encryptModel?: string;
+    protocol: number;
+    pv: string;
+    t: number;
   };
-  if (inner.encryptModel && inner.encryptModel.toLowerCase().includes('gcm')) {
-    throw new UnsupportedEncryptionError(inner.encryptModel);
-  }
-  return { messageId: frame.messageId, event: JSON.parse(decryptData(inner.data, secret)) };
+  return {
+    messageId: frame.messageId,
+    protocol: inner.protocol,
+    pv: inner.pv,
+    t: inner.t,
+    event: JSON.parse(decryptData(inner.data, secret)),
+  };
 }
 
 export interface PulsarConsumerOptions {
   accessId: string;
   secret: string;
   wsEndpoint: string;
+  /** `event` (produção, padrão) ou `event-test` (canal de teste: exige escolher os dispositivos de teste no console). */
   topic?: string;
-  onEvent: (event: unknown, meta: { messageId: string }) => void | Promise<void>;
+  /** Deve coincidir com a configuração do console. Padrão `ecb`. */
+  encryption?: PulsarEncryption;
+  onEvent: (event: unknown, meta: Omit<DecodedMessage, 'event'>) => void | Promise<void>;
   onError?: (err: unknown) => void;
   reconnectMinMs?: number;
   reconnectMaxMs?: number;
@@ -84,6 +122,7 @@ export class PulsarConsumer {
   constructor(o: PulsarConsumerOptions) {
     this.#o = {
       topic: 'event',
+      encryption: 'ecb',
       onError: () => {},
       reconnectMinMs: 1_000,
       reconnectMaxMs: 30_000,
@@ -138,8 +177,8 @@ export class PulsarConsumer {
     let messageId: string | undefined;
     try {
       messageId = (JSON.parse(raw) as PulsarFrame).messageId;
-      const decoded = decodeFrame(raw, this.#o.secret);
-      await this.#o.onEvent(decoded.event, { messageId: decoded.messageId });
+      const { event, ...meta } = decodeFrame(raw, this.#o.secret, this.#o.encryption);
+      await this.#o.onEvent(event, meta);
     } catch (err) {
       this.#o.onError(err);
     } finally {

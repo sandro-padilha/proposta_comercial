@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { TuyaApiError, TuyaClient } from '../src/client.ts';
+import { TUYA_API_ENDPOINTS, TUYA_ERROR, TuyaApiError, TuyaClient } from '../src/client.ts';
 import { sign } from '../src/sign.ts';
 
 interface Call {
@@ -100,16 +100,35 @@ test('erro da API vira TuyaApiError com código', async () => {
   await assert.rejects(client.getStatus('dev1'), (e: unknown) => e instanceof TuyaApiError && e.code === 2001 && e.tid === 't-1');
 });
 
-test('token inválido (1010): renova e tenta uma única vez', async () => {
+// Códigos oficiais: 1010 "token is expired", 1011 "token invalid", 1012 "token status is invalid".
+for (const code of [TUYA_ERROR.TOKEN_EXPIRED, TUYA_ERROR.TOKEN_INVALID, TUYA_ERROR.TOKEN_STATUS_INVALID]) {
+  test(`erro de token (${code}): renova e tenta uma única vez`, async () => {
+    const now = { v: 1_751_000_000_000 };
+    let n = 0;
+    let businessCalls = 0;
+    const { client } = make((c) => {
+      if (c.url.includes('/v1.0/token')) return tokenResult(++n);
+      return ++businessCalls === 1 ? { success: false, code, msg: 'token problem' } : ok(['ok']);
+    }, now);
+    assert.deepEqual(await client.getStatus('dev1'), ['ok']);
+    assert.equal(businessCalls, 2);
+  });
+}
+
+test('erro de permissão (1106) NÃO dispara nova tentativa', async () => {
   const now = { v: 1_751_000_000_000 };
-  let n = 0;
   let businessCalls = 0;
   const { client } = make((c) => {
-    if (c.url.includes('/v1.0/token')) return tokenResult(++n);
-    return ++businessCalls === 1 ? { success: false, code: 1010, msg: 'token invalid' } : ok(['ok']);
+    if (c.url.includes('/v1.0/token')) return tokenResult(1);
+    businessCalls += 1;
+    return { success: false, code: TUYA_ERROR.PERMISSION_DENIED, msg: 'permission deny' };
   }, now);
-  assert.deepEqual(await client.getStatus('dev1'), ['ok']);
-  assert.equal(businessCalls, 2);
+  await assert.rejects(client.getStatus('dev1'), (e: unknown) => e instanceof TuyaApiError && e.code === 1106);
+  assert.equal(businessCalls, 1);
+});
+
+test('endpoint do Eastern America (Brasil, apps novos) está disponível', () => {
+  assert.equal(TUYA_API_ENDPOINTS.ueaz, 'https://openapi-ueaz.tuyaus.com');
 });
 
 test('rota de ar-condicionado por IR usa o caminho e o corpo esperados', async () => {
