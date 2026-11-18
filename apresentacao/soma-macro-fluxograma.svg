@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Segoe UI, Calibri, Arial, Helvetica, sans-serif">
+<defs>
+  <style>
+    .ink{fill:#10212B}.mut{fill:#5B7078}.acc{fill:#1B5068}.cop{fill:#9A5A24}.wht{fill:#FFFFFF}
+    .b{font-weight:700}.sb{font-weight:600}
+    .eyebrow{font-size:14px;font-weight:700;letter-spacing:1.6px}
+  </style>
+</defs>
+
+<rect width="1600" height="900" fill="#FFFFFF"/>
+
+<!-- ================= TITULO ================= -->
+<rect x="100" y="56" width="6" height="56" fill="#9A5A24"/>
+<text x="126" y="90" class="ink b" font-size="40" letter-spacing="0.5">METODOLOGIA SOMA</text>
+<text x="126" y="122" class="mut" font-size="20">Como a prioridade de manutenção é definida — do dado operacional à decisão de investimento</text>
+<rect x="1276" y="62" width="224" height="38" rx="19" fill="#E6EFF3"/>
+<text x="1388" y="87" class="acc b" font-size="15" letter-spacing="1.2" text-anchor="middle">CICLO ANUAL · FEV–JUL</text>
+
+<!-- ================= ENTRADAS ================= -->
+<rect x="100" y="168" width="1400" height="64" rx="8" fill="#F3F7F8" stroke="#C9D6DB"/>
+<text x="128" y="207" class="cop eyebrow">ENTRADAS</text>
+<text x="262" y="208" class="ink" font-size="19">Compensações
+  <tspan class="mut">  ·  </tspan>Clientes<tspan class="mut">  ·  </tspan>Consumo<tspan class="mut">  ·  </tspan>Ocorrências<tspan class="mut">  ·  </tspan>Inspeções em campo</text>
+
+<path d="M800 232 L800 254" stroke="#9FB4BB" stroke-width="2.5"/>
+<path d="M267 254 L1333 254" stroke="#9FB4BB" stroke-width="2.5"/>
+<path d="M267 254 L267 272 M622 254 L622 272 M978 254 L978 272 M1333 254 L1333 272" stroke="#9FB4BB" stroke-width="2.5"/>
+<path d="M260 270 L267 284 L274 270 Z M615 270 L622 284 L629 270 Z M971 270 L978 284 L985 270 Z M1326 270 L1333 284 L1340 270 Z" fill="#9FB4BB"/>
+
+<!-- ================= CARDS ================= -->
+<!-- card 1 -->
+<rect x="100" y="290" width="335" height="230" rx="10" fill="#FFFFFF" stroke="#C9D6DB" stroke-width="1.5"/>
+<circle cx="140" cy="335" r="19" fill="#1B5068"/>
+<text x="140" y="342" class="wht b" font-size="20" text-anchor="middle">1</text>
+<text x="174" y="343" class="ink b" font-size="25" letter-spacing="0.4">IMPACTO</text>
+<text x="128" y="397" class="mut" font-size="18">Quanto custa se falhar?</text>
+<line x1="128" y1="420" x2="407" y2="420" stroke="#E1E9EC" stroke-width="1.5"/>
+<text x="128" y="448" class="cop eyebrow" font-size="13">RESULTADO</text>
+<rect x="128" y="464" width="64" height="28" rx="5" fill="#F7E6E3"/>
+<text x="160" y="483" fill="#B03A2E" class="b" font-size="13" text-anchor="middle">Crítico</text>
+<rect x="198" y="464" width="47" height="28" rx="5" fill="#F8F0D9"/>
+<text x="221" y="483" fill="#8A6A11" class="b" font-size="13" text-anchor="middle">Alto</text>
+<rect x="251" y="464" width="58" height="28" rx="5" fill="#F8F0D9"/>
+<text x="280" y="483" fill="#8A6A11" class="b" font-size="13" text-anchor="middle">Médio</text>
+<rect x="315" y="464" width="56" height="28" rx="5" fill="#E2F0E8"/>
+<text x="343" y="483" fill="#2D6A4F" class="b" font-size="13" text-anchor="middle">Baixo</text>
+
+<path d="M437 398 L451 405 L437 412 Z" fill="#9FB4BB"/>
+
+<!-- card 2 -->
+<rect x="455" y="290" width="335" height="230" rx="10" fill="#FFFFFF" stroke="#C9D6DB" stroke-width="1.5"/>
+<circle cx="495" cy="335" r="19" fill="#1B5068"/>
+<text x="495" y="342" class="wht b" font-size="20" text-anchor="middle">2</text>
+<text x="529" y="343" class="ink b" font-size="25" letter-spacing="0.4">RISCO</text>
+<text x="483" y="397" class="mut" font-size="18">Com que frequência falha?</text>
+<line x1="483" y1="420" x2="762" y2="420" stroke="#E1E9EC" stroke-width="1.5"/>
+<text x="483" y="448" class="cop eyebrow" font-size="13">RESULTADO</text>
+<text x="483" y="483" class="acc sb" font-size="21">Pontuação de Risco</text>
+<text x="483" y="505" class="mut" font-size="15">análise de modos de falha</text>
+
+<path d="M792 398 L806 405 L792 412 Z" fill="#9FB4BB"/>
+
+<!-- card 3 -->
+<rect x="810" y="290" width="335" height="230" rx="10" fill="#FFFFFF" stroke="#C9D6DB" stroke-width="1.5"/>
+<circle cx="850" cy="335" r="19" fill="#1B5068"/>
+<text x="850" y="342" class="wht b" font-size="20" text-anchor="middle">3</text>
+<text x="884" y="343" class="ink b" font-size="25" letter-spacing="0.4">DETECÇÃO</text>
+<text x="838" y="397" class="mut" font-size="18">Onde inspecionar primeiro?</text>
+<line x1="838" y1="420" x2="1117" y2="420" stroke="#E1E9EC" stroke-width="1.5"/>
+<text x="838" y="448" class="cop eyebrow" font-size="13">RESULTADO</text>
+<text x="838" y="483" class="acc sb" font-size="21">IPD</text>
+<text x="838" y="505" class="mut" font-size="15">ranking de inspeção</text>
+
+<path d="M1147 398 L1161 405 L1147 412 Z" fill="#9FB4BB"/>
+
+<!-- card 4 -->
+<rect x="1165" y="290" width="335" height="230" rx="10" fill="#FFFFFF" stroke="#C9D6DB" stroke-width="1.5"/>
+<circle cx="1205" cy="335" r="19" fill="#1B5068"/>
+<text x="1205" y="342" class="wht b" font-size="20" text-anchor="middle">4</text>
+<text x="1239" y="343" class="ink b" font-size="25" letter-spacing="0.4">CONDIÇÃO</text>
+<text x="1193" y="397" class="mut" font-size="18">O que a inspeção encontrou?</text>
+<line x1="1193" y1="420" x2="1472" y2="420" stroke="#E1E9EC" stroke-width="1.5"/>
+<text x="1193" y="448" class="cop eyebrow" font-size="13">RESULTADO</text>
+<text x="1193" y="483" class="acc sb" font-size="21">IEA</text>
+<text x="1193" y="505" class="mut" font-size="15">nível de degradação</text>
+
+<path d="M267 520 L267 544 M622 520 L622 544 M978 520 L978 544 M1333 520 L1333 544" stroke="#9FB4BB" stroke-width="2.5"/>
+<path d="M267 544 L1333 544" stroke="#9FB4BB" stroke-width="2.5"/>
+<path d="M800 544 L800 560" stroke="#9FB4BB" stroke-width="2.5"/>
+<path d="M793 558 L800 572 L807 558 Z" fill="#9FB4BB"/>
+
+<!-- ================= IER ================= -->
+<rect x="100" y="578" width="1400" height="102" rx="10" fill="#1B5068"/>
+<text x="148" y="645" class="wht b" font-size="34">IER  =  40% IPD  +  60% IEA</text>
+<text x="1452" y="631" class="wht sb" font-size="21" text-anchor="end" opacity="0.95">Prioridade única de atuação</text>
+<text x="1452" y="657" class="wht" font-size="16" text-anchor="end" opacity="0.72">do ativo mais crítico ao menos crítico</text>
+
+<path d="M800 680 L800 714" stroke="#9FB4BB" stroke-width="2.5"/>
+<path d="M793 712 L800 726 L807 712 Z" fill="#9FB4BB"/>
+
+<!-- ================= SAIDA ================= -->
+<rect x="100" y="734" width="1400" height="124" rx="10" fill="#FAF3EC" stroke="#D8B48C"/>
+<rect x="128" y="762" width="300" height="68" rx="7" fill="#FFFFFF" stroke="#D8B48C"/>
+<text x="150" y="790" class="ink b" font-size="17">PLANO DE MANUTENÇÃO</text>
+<text x="150" y="814" class="cop b" font-size="15" letter-spacing="0.8">OPEX</text>
+<rect x="446" y="762" width="300" height="68" rx="7" fill="#FFFFFF" stroke="#D8B48C"/>
+<text x="468" y="790" class="ink b" font-size="17">PLANO DE INVESTIMENTO</text>
+<text x="468" y="814" class="cop b" font-size="15" letter-spacing="0.8">CAPEX</text>
+<text x="775" y="808" class="cop b" font-size="32" text-anchor="middle">=</text>
+<text x="812" y="790" class="ink b" font-size="20">PLANO DE MELHORIA DA QUALIDADE DO SERVIÇO</text>
+<text x="812" y="818" class="mut" font-size="16">Capítulo “Qualidade do Serviço” do Plano de Negócios</text>
+
+<text x="1500" y="884" class="mut" font-size="13" text-anchor="end">Base: NDU-029 rev. 3.0 — Metodologia SOMA</text>
+</svg>
